@@ -9,6 +9,16 @@ enum condition_attribute //состояние атрибута
 	atr_operator, //состояние оператора
 	atr_value //состояние числа
 };
+std::string update_str(std::string str)
+{
+	std::string result;
+	result = str + ' ';
+	if (str[0] == '-')
+	{
+		result = '0' + str + ' ';
+	}
+	return result;
+}
 bool check_correct(std::string& str)//проверка коректности введенных чисел
 {
 	std::vector<int> symbol = { 32,40,41,42,43, 45,46, 47,48,49,50,51,52,53,54,55,56,57 };//допустимые значения
@@ -172,11 +182,11 @@ double calc(std::string expression)
 			std::stack<double> arr_num;//стек для чисел
 			std::stack<char> arr_opr;//стек для операций
 			std::string value_str = "";//считываемое число типа стринг
-			std::string full_str = expression + " ";//строка с математическим выражением + пробел  в конце
+			std::string full_str = expression + ' ';//строка с математическим выражением + пробел  в конце
 			int condition = condition_attribute::atr_none;//состояние атрибута
 			size_t pozition = 0;//позиция итератора в строке
-			int first_value = 0;//первое число для математической операции
-			int second_value = 0;//второе число для математической операции
+			double first_value = 0;//первое число для математической операции
+			double second_value = 0;//второе число для математической операции
 			char var_operator = ' ';//опреация
 			int streak_operator = 0;//количество подряд идущих опреаторов
 			bool negative_value = false;//режим отрицательного числа
@@ -193,7 +203,7 @@ double calc(std::string expression)
 				{
 					if (arr_opr.empty())//при пустом стеке опреаций
 					{
-						if (arr_num.empty())//при пустом стеке с числами
+						if (arr_num.empty()&&value_str[0] == '-')//при пустом стеке с числами
 						{
 							negative_value = true;//активация режима отрицательного числа
 						}
@@ -256,6 +266,7 @@ double calc(std::string expression)
 						{
 							if (arr_num.size() > 1)//при возможности провести математическую операцию
 							{
+								replay:
 								second_value = arr_num.top();//считывание верхнего числа стека
 								arr_num.pop();//удаление верхнего числа стека
 								first_value = arr_num.top();//считывание верхнего числа стека
@@ -264,8 +275,23 @@ double calc(std::string expression)
 								arr_opr.pop();//удаление верхней операции стека
 								arr_num.push(math_operation(first_value, second_value, var_operator));//добавление в стек результата математической операции
 							}
-							arr_opr.push(value_str[0]);//добавление операции в стек
-							streak_operator++;//увеличение количества подряд идущих символов
+							if (arr_opr.size() != 0)
+							{
+								if (get_priority(value_str[0]) == get_priority(arr_opr.top()))
+								{
+									goto replay;
+								}
+								else
+								{
+									arr_opr.push(value_str[0]);//добавление опреатора в стек с опреаторами
+									streak_operator++;//увеличение количества подряд идущих опреаторов
+								}
+							}
+							else
+							{
+								arr_opr.push(value_str[0]);//добавление операции в стек
+								streak_operator++;//увеличение количества подряд идущих символов
+							}
 						}
 						else if (get_priority(arr_opr.top()) == 3 && (get_priority(value_str[0]) == 1 || get_priority(value_str[0]) == 2))// прри добавлении операции после символа "("
 						{
@@ -323,5 +349,6 @@ double calc(std::string expression)
 }
 int main()
 {
+	cout << calc("-7 * -(6 / 3)") << endl;
 	return 0;
 }
