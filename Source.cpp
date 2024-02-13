@@ -9,29 +9,12 @@ enum condition_attribute //состояние атрибута
 	atr_operator, //состояние оператора
 	atr_value //состояние числа
 };
-std::string update_str(std::string str)
-{
-	try
-	{
-		std::string result;
-		result = str + ' ';
-		if (str[0] == '-')
-		{
-			result = '0' + str + ' ';
-		}
-		return result;
-	}
-	catch (...)
-	{
-		return "error";
-	}
-}
 bool check_correct(std::string& str)//проверка коректности введенных чисел
 {
 	try
 	{
 		std::vector<int> symbol = { 32,40,41,42,43, 45,46, 47,48,49,50,51,52,53,54,55,56,57 };//допустимые значения
-		int count = 0;// итератор вектора
+		size_t count = 0;// итератор вектора
 		for (size_t i = 0; i < str.size();)//проверка каждого элемента строки на корректность
 		{
 			if ((int)str[i] == symbol[count])
@@ -57,38 +40,38 @@ bool check_correct(std::string& str)//проверка коректности введенных чисел
 }
 bool check_scobs(std::string& str)//проверка на корректность скобок
 {
-	try
+	try//обработчик исключений
 	{
-		int count_left = 0;
-		int count_right = 0;
-		for (size_t i = 0;i < str.size();i++)
+		int count_left = 0;//количество левых скобок
+		int count_right = 0;//количество правых скобок
+		for (size_t i = 0;i < str.size();i++)//перебор всех элементов строки
 		{
-			if ((int)str[i] == 40)
+			if ((int)str[i] == 40)//посчет левых скобок
 			{
-				++count_left;
+				++count_left;//увеличение количества левых скобок на 1
 			}
-			if ((int)str[i] == 41)
+			if ((int)str[i] == 41)//подсчет правых скобок
 			{
-				++count_right;
+				++count_right;//увеличение количества правых скобок на 1
 			}
 		}
-		if (count_left == count_right)
+		if (count_left == count_right)//при равном количестве правых и левых скобок
 		{
-			return true;
+			return true;//возврат положительного значения
 		}
 		else
 		{
-			return false;
+			return false;//возврат отрицательного значения
 		}
 	}
-	catch (...)
+	catch (...)//захват любого исключения
 	{
-		return 0;
+		return 0;//возврат 0
 	}
 }
 double math_operation(double value1, double value2, char opr)//выполнение математической операции
 {
-	try
+	try//обработчик исключений
 	{
 		if (opr == '+')//сложение
 		{
@@ -108,51 +91,51 @@ double math_operation(double value1, double value2, char opr)//выполнение матема
 		}
 		return 0.0;
 	}
-	catch (...)
+	catch (...)//захват любого значения
 	{
 		return 0;
 	}
 }
-bool check_value(char symbol)//пределение числа
+bool check_value(char symbol)//определение числа
 {
-	try
+	try//обработчик исключений
 	{
-		if ((int)symbol >= 48 && (int)symbol <= 57 || (int)symbol == 46)
+		if (((int)symbol >= 48 && (int)symbol <= 57) || (int)symbol == 46)//если символ является числом
 		{
-			return true;
+			return true;//возврат положительного значения
 		}
 		else
 		{
-			return false;
+			return false;//возврат отрицательного значения
 		}
 	}
-	catch (...)
+	catch (...)//захват любого исключения
 	{
 		return 0;
 	}
 }
 bool check_operator(char symbol)//определение оператора
 {
-	try
+	try//обработчик исключений
 	{
-		std::vector<int> arr_symbol = { 40, 41, 42, 43, 45, 47 };
-		for (size_t i = 0;i < arr_symbol.size();i++)
+		std::vector<int> arr_symbol = { 40, 41, 42, 43, 45, 47 };//допустимые символы
+		for (size_t i = 0;i < arr_symbol.size();i++)//перебор всех допустимых символов
 		{
-			if (arr_symbol[i] == (int)symbol)
+			if (arr_symbol[i] == (int)symbol)//при совпадении с допустимым символом
 			{
-				return true;
+				return true;//возврат положительного значения
 			}
 		}
-		return false;
+		return false;//возврат отрицательного значения
 	}
-	catch (...)
+	catch (...)//захват любого исключения
 	{
 		return 0;
 	}
 }
 void get_attribute(const std::string& str, std::string& value_str, int& condition, size_t& pozition)//получение следующего атрибута
 {
-	try
+	try//обработчик исключений
 	{
 		std::string value_s = "";
 		value_str = "";
@@ -198,25 +181,25 @@ void get_attribute(const std::string& str, std::string& value_str, int& conditio
 		return;
 	}
 }
-int get_priority(char opr)
+int get_priority(char opr)//определение приоритета оператора
 {
 	// +, - : 1
 	// *, / : 2
 	// ( : 3
 	// ) : 4
-	if ((int)opr == 43 || (int)opr == 45)
+	if ((int)opr == 43 || (int)opr == 45)//символы + и -
 	{
 		return 1;
 	}
-	if ((int)opr == 42 || (int)opr == 47)
+	if ((int)opr == 42 || (int)opr == 47)//символы * и /
 	{
 		return 2;
 	}
-	if ((int)opr == 40)
+	if ((int)opr == 40)//символ (
 	{
 		return 3;
 	}
-	if ((int)opr == 41)
+	if ((int)opr == 41)//символ )
 	{
 		return 4;
 	}
@@ -280,7 +263,7 @@ int get_quantity_operator(const std::string& str)
 		return 0;
 	}
 }
-double calc(std::string expression)
+double calc(std::string expression)//основная функция расчета
 {
 	try
 	{
@@ -316,12 +299,8 @@ double calc(std::string expression)
 						}
 					}
 				}
-				while (true)//бесконечный цикл выполнения математических операций
+				while (pozition<full_str.size())//бесконечный цикл выполнения математических операций
 				{
-					if (pozition >= full_str.size())//проверка на окончание строки с математичекским выражением
-					{
-						break;//остановка цикла
-					}
 					value_str = "";//присвоение пустого значения
 					condition = condition_attribute::atr_none;//присвоение пустого атрибута
 					get_attribute(full_str, value_str, condition, pozition);//считывание следующего атрибута
@@ -347,20 +326,23 @@ double calc(std::string expression)
 							}
 							else if (get_priority(value_str[0]) == 4)// если операция = ")" 
 							{
-								while (true)//бесконечный цикл, до встречи операции "("
+								while (arr_opr.size()!=0)//бесконечный цикл, до встречи операции "("
 								{
 									if (get_priority(arr_opr.top()) == 3)//при встрече операции "("
 									{
 										arr_opr.pop();//удаление операции "("
 										break;//выход из цикла
 									}
-									second_value = arr_num.top();//считывание верхнего числа стека 
-									arr_num.pop();//удаление верхнего числа стека
-									first_value = arr_num.top();//считывание верхнего числа стека
-									arr_num.pop();//удаление верхнего числа стека
-									var_operator = arr_opr.top();//считывание верхней операции стека
-									arr_opr.pop();//удаление верхней операции стека
-									arr_num.push(math_operation(first_value, second_value, var_operator));//добавление в стек с числами результата математической опреации
+									if (arr_num.size() >= 2 && arr_opr.size() >= 1)
+									{
+										second_value = arr_num.top();//считывание верхнего числа стека 
+										arr_num.pop();//удаление верхнего числа стека
+										first_value = arr_num.top();//считывание верхнего числа стека
+										arr_num.pop();//удаление верхнего числа стека
+										var_operator = arr_opr.top();//считывание верхней операции стека
+										arr_opr.pop();//удаление верхней операции стека
+										arr_num.push(math_operation(first_value, second_value, var_operator));//добавление в стек с числами результата математической опреации
+									}
 									if (get_priority(arr_opr.top()) == 3)//при встрече операции "("
 									{
 										arr_opr.pop();//удаление опреации "("
@@ -370,7 +352,7 @@ double calc(std::string expression)
 							}
 							else if (get_priority(value_str[0]) == get_priority(arr_opr.top()))//при встрече операции с равнозначным приоритетом
 							{
-								if (arr_num.size() > 1 && arr_opr.size() > 0)//при возможности провести полноценную математическую операцию
+								if (arr_num.size() >= 2 && arr_opr.size() >= 1)//при возможности провести полноценную математическую операцию
 								{
 									second_value = arr_num.top();//считывание верхнего числа стека
 									arr_num.pop();//удаление верхнего числа стека
@@ -390,7 +372,7 @@ double calc(std::string expression)
 							}
 							else if (get_priority(value_str[0]) == 1 && get_priority(arr_opr.top()) == 2)//при более низком приоритете текучей опреации чем операции в стеке
 							{
-								if (arr_num.size() > 1)//при возможности провести математическую операцию
+								if (arr_num.size() >= 2 && arr_opr.size()>=1)//при возможности провести математическую операцию
 								{
 									replay:
 									second_value = arr_num.top();//считывание верхнего числа стека
@@ -463,13 +445,16 @@ double calc(std::string expression)
 				}
 				while (!arr_opr.empty())//цикл опустошения стека с операциями
 				{
-					second_value = arr_num.top();//считывание верхнего числа стека
-					arr_num.pop();//удаление верхнего числа стека
-					first_value = arr_num.top();//считывание верхнего числа стека
-					arr_num.pop();//удаление верхнего числа стека
-					var_operator = arr_opr.top();//считывание верхнего оператора стека
-					arr_opr.pop();//считывание верхнего числа стека
-					arr_num.push(math_operation(first_value, second_value, var_operator));//добавление в стек результата математической операции
+					if (arr_num.size() >= 2)
+					{
+						second_value = arr_num.top();//считывание верхнего числа стека
+						arr_num.pop();//удаление верхнего числа стека
+						first_value = arr_num.top();//считывание верхнего числа стека
+						arr_num.pop();//удаление верхнего числа стека
+						var_operator = arr_opr.top();//считывание верхнего оператора стека
+						arr_opr.pop();//считывание верхнего числа стека
+						arr_num.push(math_operation(first_value, second_value, var_operator));//добавление в стек результата математической операции
+					}
 				}
 				return arr_num.top();//возврат верхнего элемента стека (результата)
 			}
@@ -490,7 +475,36 @@ double calc(std::string expression)
 	}
 }
 int main()
-{
-	cout << calc("1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1") << endl;
+{ 
+	string math_expression ;
+	string var;
+	cout << "welcome in the string calculate" << endl;
+	cout << "enter 'm' for exucate math expression" << endl;
+	cout << "enter 'q' for exit" << endl;
+	while (true)
+	{
+		try
+		{
+			getline(cin, var);
+			if (var == "m")
+			{
+				cout << "enter a your math expression" << endl;
+				getline(cin, math_expression);
+				cout << "your result = " << calc(math_expression) << endl;
+			}
+			else if (var == "q")
+			{
+				break;
+			}
+			else if (true)
+			{
+				cout << "error out" << endl;
+			}
+		}
+		catch (...)
+		{
+			cout << "error out" << endl;
+		}
+	}
 	return 0;
 }
